@@ -1,0 +1,13 @@
+{
+  "messageId": "message.MessageId",
+  "source": "aws.lambda",
+  "invoker": {
+    "functionName": "testFunction",
+    "functionVersion": "1",
+    "invokedFunctionArn": "arn:::testFunction"
+  },
+  "receiptHandle": "test",
+  "retries": "0",
+  "payload": "{\"distributor_id\": \"string_123\"}",
+  "md5Payload": "27E2FF58A4D47A9E20D059B165767845"
+}

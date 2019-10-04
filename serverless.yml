@@ -1,0 +1,41 @@
+service: mpp-sqs-client-adapter
+
+custom:
+  settings:
+    ACCOUNT_ID: "193400596843"
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  region: ap-northeast-1
+  environment: ${self:custom.settings}
+
+  iamRoleStatements:
+    - Effect: "Allow"
+      Action:
+        - "sqs:SendMessage"
+        - "sqs:GetQueueUrl"
+      Resource: "arn:aws:sqs:${self:provider.region}:*:JobsQueue"
+    - Effect: "Allow"
+      Action:
+        - "sqs:ListQueues"
+      Resource: "arn:aws:sqs:${self:provider.region}:*:*"
+
+functions:
+  SPRunner:
+    handler: handlers/sp-runner-handler.SPRunner
+  sqsHello:
+    handler: handlers/job-dispatcher-handler.dispatcher
+    events:
+      - sqs:
+          arn:
+            Fn::GetAtt:
+              - MyQueue
+              - Arn
+
+resources:
+  Resources:
+    MyQueue:
+      Type: "AWS::SQS::Queue"
+      Properties:
+        QueueName: "JobsQueue"
